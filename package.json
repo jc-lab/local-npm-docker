@@ -1,0 +1,26 @@
+{
+  "name": "local-npm-docker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "local-npm",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jc-lab/local-npm-docker.git"
+  },
+  "author": {
+    "name": "Joseph Lee",
+    "email": "development@jc-lab.net"
+  },
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/jc-lab/local-npm-docker/issues"
+  },
+  "homepage": "https://github.com/jc-lab/local-npm-docker#readme",
+  "dependencies": {
+    "local-npm": "2.2.2"
+  }
+}
