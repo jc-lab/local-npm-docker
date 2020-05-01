@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "local-npm.fullname" . }}
+  labels: {{- include "local-npm.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {{- include "local-npm.matchLabels" . | nindent 6 }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels: {{- include "local-npm.labels" . | nindent 8 }}
+    spec:
+      volumes:
+{{- if and .Values.persistence.enabled .Values.persistence.existingClaim }}
+      - name: local-npm-data
+        persistentVolumeClaim:
+          claimName: {{ .Values.persistence.existingClaim }}
+{{- else if not .Values.persistence.enabled }}
+        - name: local-npm-data
+          emptyDir: {}
+{{- else }}
+        persistentVolumeClaim:
+          claimName: {{ .Release.Name }}-local-npm-data
+{{- end }}
+      containers:
+        - name: main
+{{- if .Values.image.registry }}
+          image: {{ printf "%s/%s" .Values.image.registry .Values.image.name | quote }}
+{{- else }}
+          image: {{ .Values.image.name | quote }}
+{{- end }}
+          imagePullPolicy: {{ .Values.image.pullPolicy | quote }
+          command:
+            - /entrypoint.sh
+          env:
+          - name: BASE_URL
+            value: {{ .Values.baseUrl | quote }}
+{{- if .Values.remoteRegistry.url }}
+          - name: REMOTE_REGISTRY
+            value: {{ .Values.remoteRegistry.url | quote }}
+{{- end }}
+{{- if .Values.remoteRegistry.skimDb }}
+          - name: REMOTE_REGISTRY_SKIMDB
+            value: {{ .Values.remoteRegistry.skimDb | quote }}
+{{- end }}
+          volumeMounts:
+          - name: local-npm-data
+            mountPath: /data
+          {{- if .Values.resources }}
+          resources: {{- toYaml .Values.resources | nindent 12 }}
+          {{- end }}

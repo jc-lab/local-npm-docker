@@ -1,0 +1,21 @@
+image:
+  registry:
+  name: jclab/local-npm:1.0.0-local-npm.2.2.2
+
+baseUrl: http://127.0.0.1:5080
+
+remoteRegistry:
+  url: https://registry.npmjs.org
+  skimDb: https://skimdb.npmjs.com/registry
+
+persistence:
+  enabled: true
+  size: 32Gi
+  storageClass: null
+
+resources:
+  requests:
+    memory: 256Mi
+  limits:
+    memory: 512Mi
+
